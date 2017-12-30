@@ -1,7 +1,7 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: Amin
- * Date: 12/30/2017
- * Time: 12:33 PM
+ * @author Amin Keshvarz <amin@keshavarz.pro>
+ * @since  2017
  */
+
+BOL_LanguageService::getInstance()->addPrefix('pv-api', 'وب سرویس ارسال پیام به کاربران');
