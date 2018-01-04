@@ -4,4 +4,4 @@
  * @since  2017
  */
 
-OW::getRouter()->addRoute(new OW_Route('pvApi.index', 'api', "API_MESSAGE_TO_USERS_PV_CTRL_Api", 'index'));
+OW::getRouter()->addRoute(new OW_Route('restapi.index', 'api', "RESTAPI_CTRL_Api", 'index'));

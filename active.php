@@ -4,4 +4,4 @@
  * @since  2017
  */
 
-BOL_LanguageService::getInstance()->addPrefix('pv-api', 'وب سرویس ارسال پیام به کاربران');
+BOL_LanguageService::getInstance()->addPrefix('restapi', 'وب سرویس ارسال پیام به کاربران');

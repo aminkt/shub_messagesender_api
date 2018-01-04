@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <plugin>
     <name>API استانداری</name>
-    <key>api_message_to_users_pv</key>
+    <key>restapi</key>
     <description>از این پلاگین برای ارتباط بین سرویس های استانداری و نرم افزار استفاده میشود تا پیام هایی به چت کاربران ارسال شود.</description>
     <author>Amin Kehavarz</author>
     <authorEmail>amin@keshavarz.pto</authorEmail>
     <authorUrl>http://www.keshavarz.pro</authorUrl>
-    <developerKey>amin@keshavarz.pro_aminkt</developerKey>
+    <developerKey>15615615618965hglvg</developerKey>
     <build>1</build>
     <copyright>(C) 2017. APA of guilan.</copyright>
     <license>The License</license>
