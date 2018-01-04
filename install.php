@@ -5,6 +5,8 @@
  */
 BOL_LanguageService::getInstance()->addPrefix('restapi', 'وب سرویس ارسال پیام به کاربران');
 
+OW::getPluginManager()->addPluginSettingsRouteName('restapi', 'restapi.admin');
+
 $sql = "DROP TABLE IF EXISTS `" . OW_DB_PREFIX . "restapi_tokens`";
 OW::getDbo()->query($sql);
 
