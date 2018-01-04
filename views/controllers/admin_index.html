@@ -1,2 +1,49 @@
-Show api
+{if isset($token)}
+<div style="background: #ffc20066;padding: 10px;margin: 20px;">
+    توکن صادر شده در زیر آمده است. لطفا آن را کپی کنید. <br>
+    توجه کنید که شما بعدا قادر به مشاهده این توکن نیستید و فقط میتوانید آن را باز تولید کنید. <br>
 
+    <code>{$token}</code>
+</div>
+{/if}
+
+
+{form name='add_token_form'}
+<table class="ow_table_1 ow_form ow_automargin" border="0" style="width: 60%;">
+    <tr class="ow_alt1">
+        <td class="ow_value" style="border:0;">{input name='name' style='height:50px;'}</td>
+        <td class="ow_value" style="border:0;">{submit name='submit' class='ow_button ow_ic_save'}</td>
+    </tr>
+</table>
+{/form}
+
+
+<hr>
+
+<table class="ow_table_1 ow_automargin" style="width: 80%;">
+    <tr class="{cycle values='ow_alt1,ow_alt2'}">
+        <td>نام سرویس</td>
+        <td>تاریخ ویرایش توکن</td>
+        <td>تاریخ ایجاد توکن</td>
+        <td width="1">بازسازی</td>
+        <td width="1">حذف</td>
+    </tr>
+    {foreach from=$tokenList item=token}
+    <tr class="{cycle values='ow_alt1,ow_alt2'}">
+        <td>{$token.name}</td>
+        <td>{$token.updateAt}</td>
+        <td>{$token.createAt}</td>
+        <td>
+            <a href="{$revokeUrls[$token.id]}" onclick="return confirm('آیا میخواهید این توکن را دوباره تولید کنید؟');"
+               style="width:16px; height:16px; display:block; margin:0 auto;background-repeat:no-repeat;background-position: 50% 50%;"
+               class="ow_ic_refresh"></a>
+        </td>
+        <td>
+            <a href="{$deleteUrls[$token.id]}" onclick="return confirm('آیا میخواهید این توکن را حذف کنید؟');"
+               style="width:16px; height:16px; display:block; margin:0 auto;background-repeat:no-repeat;background-position: 50% 50%;"
+               class="ow_ic_trash"></a>
+        </td>
+
+    </tr>
+    {/foreach}
+</table>
