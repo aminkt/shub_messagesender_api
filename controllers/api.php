@@ -9,6 +9,8 @@ class RESTAPI_CTRL_Api extends OW_ActionController
 {
     /** @var  \RESTAPI_CLASS_Response $response */
     private $response;
+    /** @var  \RESTAPI_CLASS_Request $request */
+    private $request;
 
 
     /**
@@ -21,23 +23,80 @@ class RESTAPI_CTRL_Api extends OW_ActionController
         parent::init();
 
         $this->response = new RESTAPI_CLASS_Response();
+        $this->request = new RESTAPI_CLASS_Request();
     }
 
-    public function index()
+    /**
+     * Send message from api to users in Shub
+     *
+     * @return array
+     *
+     * @author Amin Keshavarz <amin@keshavarz.pro>
+     */
+    public function sendMessage()
     {
-        $this->setPageTitle("Contact Us");
-        $this->setPageHeading("Contact Us");
-        echo "sdfksmdfsf";
+        if (!RESTAPI_CLASS_Request::isPost()) {
+            return $this->response->error(405, "Http method is not correct");
+        }
+
+        var_dump($_POST);
+        exit;
+        $this->request->authentication();
+
+        $username = RESTAPI_CLASS_Request::post('username');
+        $message = RESTAPI_CLASS_Request::post('message');
+
+        if (!$username or !$message or !isset($message['text']) or !isset($message['subject'])) {
+            return $this->response->error(400, "Inputs is not correct");
+        }
+
+        $user = $this->findUserByUsername($username);
+
+        $result = RESTAPI_CLASS_Mailbox::sendMessage(1, $user->id, $message['subject'], $message['text']);
+
+        if ($result) {
+            return $this->response->success($result['lastMessageTimestamp']);
+        }
+
+        return $this->response->error(500, "Message not send.");
     }
 
+    /**
+     * Revoke api token.
+     *
+     * @return array
+     *
+     * @author Amin Keshavarz <amin@keshavarz.pro>
+     */
     public function revokeToken()
     {
-        $response = [
-            'lastToken' => 'asd5asfas5f2f5f2f525af2a5f',
-            'newToken' => 'ascasf562av61a2v56a2v52v5avd5av',
-            'isAjax' => OW::getRequest()->isAjax()
-        ];
+        if (!RESTAPI_CLASS_Request::isPost()) {
+            return $this->response->error(405, "Http method is not correct");
+        }
 
-        $this->response->setStatusCode(400)->setData($response)->setMessage("Revoke access token")->render();
+        $tokenModel = $this->request->authentication();
+        $token = RESTAPI_BOL_Service::getInstance()->revokeToken((int)$tokenModel->id);
+        return $this->response->success([
+            'token' => $token,
+        ]);
+    }
+
+
+    /**
+     * Find user by user name.
+     *
+     * @param $username
+     *
+     * @return array
+     *
+     * @author Amin Keshavarz <amin@keshavarz.pro>
+     */
+    private function findUserByUsername($username)
+    {
+        $user = BOL_UserService::findByUsername($username);
+        if (!$user) {
+            return $this->response->error(404, "User not found");
+        }
+        return $user;
     }
 }

@@ -4,8 +4,8 @@
  * @since  2017
  */
 
-OW::getRouter()->addRoute(new OW_Route('restapi.index', 'rest/api/v1', "RESTAPI_CTRL_Api", 'index'));
 OW::getRouter()->addRoute(new OW_Route('restapi.token.revoke', 'rest/api/v1/token/revoke.json', "RESTAPI_CTRL_Api", 'revokeToken'));
+OW::getRouter()->addRoute(new OW_Route('restapi.sendMessage', 'rest/api/v1/sendMessage.json', "RESTAPI_CTRL_Api", 'sendMessage'));
 
 
 /**

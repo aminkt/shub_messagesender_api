@@ -99,4 +99,24 @@ class RESTAPI_BOL_Service
     {
         return RESTAPI_BOL_TokenDao::getInstance()->findAll();
     }
+
+    /**
+     * Check token that is valid or not.
+     *
+     * @return boolean|RESTAPI_BOL_Token
+     *
+     * @author Amin Keshavarz <amin@keshavarz.pro>
+     */
+    public function checkToken($token)
+    {
+        $ex = new OW_Example();
+        $ex->andFieldEqual('token', $token);
+        $model = RESTAPI_BOL_TokenDao::getInstance()->findListByExample($ex);
+
+        if ($model) {
+            return $model[0];
+        }
+
+        return false;
+    }
 }
