@@ -39,23 +39,24 @@ class RESTAPI_CTRL_Api extends OW_ActionController
             return $this->response->error(405, "Http method is not correct");
         }
 
-        var_dump($_POST);
-        exit;
         $this->request->authentication();
 
-        $username = RESTAPI_CLASS_Request::post('username');
-        $message = RESTAPI_CLASS_Request::post('message');
+        $inputs = json_decode(RESTAPI_CLASS_Request::getBody());
+        $username = $inputs->username;
+        $message = $inputs->message;
 
-        if (!$username or !$message or !isset($message['text']) or !isset($message['subject'])) {
+        if (!$username or !$message or !isset($message->text) or !isset($message->subject)) {
             return $this->response->error(400, "Inputs is not correct");
         }
 
         $user = $this->findUserByUsername($username);
 
-        $result = RESTAPI_CLASS_Mailbox::sendMessage(1, $user->id, $message['subject'], $message['text']);
+        $result = RESTAPI_CLASS_Mailbox::sendMessage(1, $user->id, $message->subject, $message->text);
 
         if ($result) {
-            return $this->response->success($result['lastMessageTimestamp']);
+            return $this->response->success([
+                'lastMessageTimestamp' => $result['lastMessageTimestamp']
+            ]);
         }
 
         return $this->response->error(500, "Message not send.");
@@ -93,7 +94,7 @@ class RESTAPI_CTRL_Api extends OW_ActionController
      */
     private function findUserByUsername($username)
     {
-        $user = BOL_UserService::findByUsername($username);
+        $user = BOL_UserService::getInstance()->findByUsername($username);
         if (!$user) {
             return $this->response->error(404, "User not found");
         }

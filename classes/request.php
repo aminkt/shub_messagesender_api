@@ -79,4 +79,17 @@ class RESTAPI_CLASS_Request
             return $response->error(401, "Your access denied.");
         }
     }
+
+    /**
+     * Return body of request.
+     *
+     * @return bool|string
+     *
+     * @author Amin Keshavarz <amin@keshavarz.pro>
+     */
+    public static function getBody()
+    {
+        $entityBody = file_get_contents('php://input');
+        return $entityBody;
+    }
 }
