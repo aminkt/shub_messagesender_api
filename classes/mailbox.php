@@ -6,7 +6,7 @@
  *
  * @author Amin Keshavarz <amin@keshavarz.pro>
  */
-class RESTAPI_CLASS_Mailbox
+class   RESTAPI_CLASS_Mailbox
 {
     public static function sendMessage($userId, $opponentId, $subject, $message, $files = array())
     {
@@ -60,7 +60,19 @@ class RESTAPI_CLASS_Mailbox
         $messageDto = $conversationService->getLastMessage($conversation->id);
 
         if (!empty($files)) {
-            $conversationService->addMessageAttachments($messageDto->id, $files);
+            $attachmentService = BOL_AttachmentService::getInstance();
+            $uid = 'mailbox_new_message_' . $opponentId;
+
+            $maxUploadSize = OW::getConfig()->getValue('base', 'attch_file_max_size_mb');
+            $validFileExtensions = json_decode(OW::getConfig()->getValue('base', 'attch_ext_list'), true);
+
+            $dtoArr = $attachmentService->processUploadedFile('mailbox', $files, $uid, $validFileExtensions, $maxUploadSize);
+
+            $filesBundeled = $attachmentService->getFilesByBundleName('mailbox', $uid);
+
+            if (!empty($filesBundeled)) {
+                $conversationService->addMessageAttachments($message->id, $filesBundeled);
+            }
         }
 
         BOL_AuthorizationService::getInstance()->trackAction('mailbox', 'send_message');
