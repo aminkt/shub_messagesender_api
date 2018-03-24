@@ -35,6 +35,7 @@ class RESTAPI_CTRL_Api extends OW_ActionController
      */
     public function sendMessage()
     {
+        die("ss");
         if (!RESTAPI_CLASS_Request::isPost()) {
             return $this->response->error(405, "Http method is not correct");
         }
@@ -51,7 +52,12 @@ class RESTAPI_CTRL_Api extends OW_ActionController
 
         $user = $this->findUserByUsername($username);
 
-        $result = RESTAPI_CLASS_Mailbox::sendMessage(1, $user->id, $message->subject, $message->text);
+        if (isset($_FILES['message']['attachment'])) {
+            $files = $_FILES['message']['attachment'];
+        } else {
+            $files = array();
+        }
+        $result = RESTAPI_CLASS_Mailbox::sendMessage(1, $user->id, $message->subject, $message->text, $files);
 
         if ($result) {
             return $this->response->success([
