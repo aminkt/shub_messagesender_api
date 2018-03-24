@@ -13,7 +13,7 @@ class RESTAPI_CLASS_Request
      * Return post request
      *
      * @param string|null $key
-     * @param mixed       $defaultValue
+     * @param mixed $defaultValue
      *
      * @return null|mixed
      *
@@ -57,6 +57,37 @@ class RESTAPI_CLASS_Request
     }
 
     /**
+     * Return body of request.
+     *
+     * @return bool|string
+     *
+     * @author Amin Keshavarz <amin@keshavarz.pro>
+     */
+    public static function getBody()
+    {
+        $entityBody = file_get_contents('php://input');
+        return $entityBody;
+    }
+
+    /**
+     * Get request headers.
+     *
+     * @return array
+     */
+    public static function getRequestHeaders()
+    {
+        $headers = array();
+        foreach ($_SERVER as $key => $value) {
+            if (substr($key, 0, 5) <> 'HTTP_') {
+                continue;
+            }
+            $header = str_replace(' ', '-', ucwords(str_replace('_', ' ', strtolower(substr($key, 5)))));
+            $headers[$header] = $value;
+        }
+        return $headers;
+    }
+
+    /**
      * Check your access by prepared token.
      *
      * @return array|\RESTAPI_BOL_Token
@@ -66,7 +97,7 @@ class RESTAPI_CLASS_Request
     public function authentication()
     {
         $response = new RESTAPI_CLASS_Response();
-        $headers = apache_request_headers();
+        $headers = self::getRequestHeaders();
         if (!isset($headers['Authorization'])) {
             return $response->error(401, "Token is not exist.");
         }
@@ -78,18 +109,5 @@ class RESTAPI_CLASS_Request
         } else {
             return $response->error(401, "Your access denied.");
         }
-    }
-
-    /**
-     * Return body of request.
-     *
-     * @return bool|string
-     *
-     * @author Amin Keshavarz <amin@keshavarz.pro>
-     */
-    public static function getBody()
-    {
-        $entityBody = file_get_contents('php://input');
-        return $entityBody;
     }
 }
