@@ -35,7 +35,6 @@ class RESTAPI_CTRL_Api extends OW_ActionController
      */
     public function sendMessage()
     {
-        die("ss");
         if (!RESTAPI_CLASS_Request::isPost()) {
             return $this->response->error(405, "Http method is not correct");
         }
